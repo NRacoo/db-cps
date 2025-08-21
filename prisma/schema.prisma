@@ -56,3 +56,17 @@ model ContentTag {
 
   @@id([contentId, tagId])
 }
+
+model Assistant {
+  id         String @id @unique @default(uuid())
+  name       String
+  kode       String @unique
+  major      String
+  university String
+  imageUrl   String
+  divisi     String
+  role       String
+  instagram  String
+  linkedin   String
+  github     String
+}
