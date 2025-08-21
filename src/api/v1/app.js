@@ -7,7 +7,7 @@ const { verifyToken, verifyAdmin } = require("../../middlewares/admin.middleware
 const router = express.Router();
 
 router.use("/content",verifyToken, verifyAdmin,ContentRoutes);
+router.use("/assistant", verifyToken, verifyAdmin, AssistantRoutes);
 router.use("/users" ,UserRoutes);
-router.use("/assistant", AssistantRoutes)
 
 module.exports = router;
