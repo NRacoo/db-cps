@@ -19,7 +19,6 @@ router.get("/", async (req, res) => {
 
 router.post("/create", async(req, res) => {
     try {
-        const user = req.user;
         const {title, content, coverImg, tags} = req.body; 
         const data = await createContent({title, content, coverImg, tags}, user.id);
         res.status(200).json({message: "berhasil membuat konten", data: data});
