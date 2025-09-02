@@ -6,7 +6,7 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 app.use(cors({
-    origin:"https://localhost:3001",
+    origin:"*",
     methods:["GET","POST"],
     credentials:true,
     allowedHeaders:["Content-type", "Authorization"]
