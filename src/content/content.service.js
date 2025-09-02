@@ -5,7 +5,7 @@ function sluglify(text) {
     return text.toString().toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w\-]+/g," ").replace(/\-\-+/g," ")
 }
 
-const createContent = async ({title, content, coverImg, tags}, userId) => {
+const createContent = async ({title, content, coverImg, tags, authorName}) => {
     const slug = await generateUniqueSlug(title)
     const tagData = tags.map(tagName => ({
          tag: {
@@ -14,7 +14,16 @@ const createContent = async ({title, content, coverImg, tags}, userId) => {
           create: {name: tagName }
         }
       }
-    }))
+    }));
+
+    const user = await prisma.user.findMany({
+        where: { name: authorName },
+        select: { id: true, name: true }
+    });
+
+    
+     if (!user) throw new Error("User not found");
+
     const newContent= await prisma.content.create({
         data:{
             title,
@@ -24,13 +33,13 @@ const createContent = async ({title, content, coverImg, tags}, userId) => {
             tags:{
                 create:tagData,
             },
-            authorId: userId,
+            authorName
         }, include: {
             tags: {
                 include: {
                     tag: true
                 }
-            }
+            },
         }
     })
     return newContent
