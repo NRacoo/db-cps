@@ -2,6 +2,7 @@ const express = require("express");
 const getContent = require("./content.repository");
 const { createContent, GetContentBySlug, DeleteBySlug, DeleteById } = require("./content.service");
 const router = express.Router();
+const prisma = require("../config/db/server")
 
 router.get("/", async (req, res) => {
     try {
@@ -19,8 +20,15 @@ router.get("/", async (req, res) => {
 
 router.post("/create", async(req, res) => {
     try {
-        const {title, content, coverImg, tags} = req.body; 
-        const data = await createContent({title, content, coverImg, tags}, user.id);
+        const {username, title, content, coverImg, tags} = req.body; 
+         const user = await prisma.user.findMany({
+            where: { name: username }
+            });
+
+    if (!user) {
+      return res.status(404).json({ message: "User tidak ditemukan" });
+    }
+        const data = await createContent({title, content, coverImg, tags, authorName:username});
         res.status(200).json({message: "berhasil membuat konten", data: data});
     } catch (error) {
         console.error(error)
